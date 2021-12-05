@@ -1,0 +1,29 @@
+:80 {
+        @insecure {
+                header X-Forwarded-Proto http
+        }
+        redir @insecure https://{host}{uri} permanent
+
+        %{ for path, url in upstream_urls }
+        handle_path ${path}* {
+                uri strip_prefix ${path}
+                reverse_proxy ${url} {
+                        header_up Host {upstream_hostport}
+                        header_up X-Forwarded-Host {host}
+                }
+        }
+        %{ endfor ~}
+
+        %{ if upstream_default != "" }
+                reverse_proxy https://rmq-03fb3b8f.svc-1.na1.cluster.hsdp.io:15672
+         %{ else }
+                header {
+                        Cache-Control "no-cache, no-store, must-revalidate"
+                        Pragma "no-cache"
+                        Expires 0
+                }
+                respond "${response_str}"
+        %{ endif }
+       
+
+}

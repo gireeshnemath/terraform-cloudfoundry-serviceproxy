@@ -49,3 +49,10 @@ variable "upstream_default" {
   description = "Set this if you have only single upstream url and want that to be proxied by default (Without any path variable)"
   default     = ""
 }
+
+variable "docker_credentials" {
+  type        = map
+  description = "Set this if you have only single upstream url and want that to be proxied by default (Without any path variable)"
+ 
+}
+

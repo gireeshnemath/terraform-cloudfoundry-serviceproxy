@@ -28,6 +28,7 @@ resource "cloudfoundry_app" "service_proxy" {
   memory       = 128
   disk_quota   = 512
   docker_image = var.caddy_image
+  docker_credentials = var.docker_credentials
   environment = {
     CADDYFILE_BASE64 = base64encode(templatefile("${path.module}/templates/Caddyfile", {
       upstream_urls = var.upstream_urls

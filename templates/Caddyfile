@@ -1,4 +1,8 @@
 :80 {
+
+         log {
+               level DEBUG
+         }
         @insecure {
                 header X-Forwarded-Proto http
         }
@@ -15,7 +19,10 @@
         %{ endfor ~}
 
         %{ if upstream_default != "" }
-                reverse_proxy https://rmq-03fb3b8f.svc-1.na1.cluster.hsdp.io:15672
+                reverse_proxy ${upstream_default} {
+                    header_up Host {upstream_hostport}
+                    header_up X-Forwarded-Host {host}
+                }
          %{ else }
                 header {
                         Cache-Control "no-cache, no-store, must-revalidate"
